@@ -1,26 +1,25 @@
 import java.util.*;
 
-public class Album {
+public class Album extends Playlist {
     private String name;
+    ChooseFromCreatedPlaylists choosePlaylists;
     private ArrayList<Song> listOfSongInAlbum;
     public ArrayList<Album> listOfAlbum;
     private ArrayList<Song> listAllSongsToPlaylist;
     private Scanner sc = new Scanner(System.in);
     public LinkedList<Song> playlistSong;
-    private boolean goingForward = false;
 
     public Album() {
         this.listOfAlbum = new ArrayList<>();
         this.listAllSongsToPlaylist = new ArrayList<>();
         this.playlistSong = new LinkedList<>();
+        this.choosePlaylists = new ChooseFromCreatedPlaylists();
     }
-
 
     public Album(String name) {
         this.name = name;
         this.listOfSongInAlbum = new ArrayList<>();
     }
-
 
     public String getName() {
         return name;
@@ -65,12 +64,11 @@ public class Album {
 
         System.out.println("start application :\n******** Playlist for songs ********");
 
-
         int number;
         boolean flag = false;
         showOptions();
         while (!flag) {
-            System.out.println("create new playlist (options show -> 0 ) :");
+            System.out.println("\nenter the number (options show -> 0 ) : ");
             boolean isInt = sc.hasNextInt();
 
             if (isInt) {
@@ -100,13 +98,16 @@ public class Album {
                     }
                     case 4: {
                         System.out.println("****** display of new songs added to the playlist ********");
-                        printListOfPlaylist();
+                        printListOfPlaylistToCreate();
                         break;
                     }
                     case 5: {
                         if (!ifPlaylistIsEmpty()) { // ! false -> true
-                            System.out.println("****** create new my playlist for songs and start *********");
-                            createNewPlaylistAndStart();
+                            System.out.println("****** new playlist added to list *********");
+                            Playlist playlist = new Playlist(playlistSong);
+                            choosePlaylists.addNewPlaylistInList(playlist);
+                            playlist.playlistAndStart();
+                            playlistSong.removeAll(playlistSong); // removes all songs in list of playlist
                         } else {
                             System.out.println("add new song in playlist ...");
                         }
@@ -131,6 +132,20 @@ public class Album {
                         break;
                     }
                     case 8: {
+                        if ( ! (choosePlaylists.getListOfPlaylists().isEmpty()) ) { // if empty list of playlists
+                            System.out.println("****** show all playlists created and start !!! ******");
+
+                            Playlist playlistChoice = choosePlaylists.choosePlaylist();
+                            if(playlistChoice != null) { // if not null start playing songs
+                                 System.out.println("****** start ******");
+                                 playlistChoice.playlistAndStart();
+                             }
+                        } else {
+                            System.out.println("no playlists in list... ");
+                        }
+                        break;
+                    }
+                    case 9: {
                         System.out.println("****** exit bye my master !!! ******");
                         flag = true;
                         break;
@@ -138,8 +153,6 @@ public class Album {
                     default: {
                         System.out.println("wrong value ....");
                     }
-
-
                 }
 
             } else {
@@ -147,7 +160,17 @@ public class Album {
                 sc.nextLine();
             }
         }
+    }
 
+    public void printListOfPlaylistToCreate() {
+        int i = 1;
+        if (!(playlistSong.isEmpty())) {
+            for (Song song : playlistSong) {
+                System.out.println((i++) + ". song: " + song.getTitle() + ", duration : " + song.getDuration());
+            }
+        } else {
+            System.out.println("the list of playlist is empty ...");
+        }
     }
 
     private boolean ifPlaylistIsEmpty() {
@@ -160,12 +183,10 @@ public class Album {
     }
 
     private void removeSongInPlaylist() {
-
         boolean flag = false;
         while (!flag) {
             System.out.println("give me the name of the song: ");
             String nameOfSongToBeRemoved = sc.nextLine();
-            Album album = null;
             int indexSongToBeRemoved = isThereSongInPlaylist(nameOfSongToBeRemoved);
 
             if (indexSongToBeRemoved >= 0) {
@@ -192,215 +213,10 @@ public class Album {
     }
 
     private void showOptions() {
-        System.out.println("\t0. show options \n\t1. displays all songs \n\t2. add new song in playlist " +
-                "\n\t3. add album in playlist \n\t4. show add my new songs to playlist \n\t5. create new my playlist for songs and start" +
-                "\n\t6. removing album from the playlist  \n\t7. removing a song from the playlist  \n\t8. exit ");
-    }
-
-    private void createNewPlaylistAndStart() {
-
-
-        ListIterator<Song> iterator = playlistSong.listIterator();
-
-        System.out.println("\n\n********* adding a new playlist *********\n\n ");
-
-
-        System.out.println("My playlist:  ");
-        printListOfPlaylist();
-
-        printOptionsForPlaylist();
-
-        boolean flag = false;
-        while (!flag) {
-            System.out.println("select a number (show options - 1 ) : ");
-            boolean isInt = sc.hasNextInt();
-            if (isInt) {
-                int number = sc.nextInt();
-                sc.nextLine();
-
-                switch (number) {
-                    case 0: {
-                        System.out.println("*********** exit ************");
-                        flag = true;
-                        break;
-                    }
-
-                    case 1: {
-                        System.out.println("*********** print Options For Playlist ***************");
-                        printOptionsForPlaylist();
-                        break;
-                    }
-                    case 2: {
-                        System.out.println("*********** skip forward ************");
-                        skipForward(iterator);
-                        break;
-                    }
-                    case 3: {
-                        System.out.println("*********** skip backwards ************");
-                        skipBackwards(iterator);
-                        break;
-                    }
-                    case 4: {
-                        System.out.println("*********** removing song in playlist ************");
-                        iterator = removingSongInPlaylist(iterator);
-                        break;
-                    }
-                    case 5: {
-                        System.out.println("*********** repeat the current song **************");
-                        repeatCurrentSong(iterator);
-                        break;
-                    }
-                    case 6: {
-                        System.out.println("************ current song played ************");
-                        currentSongPlayed(iterator);
-                        break;
-                    }
-                    case 7: {
-                        System.out.println("************ show list songs of my playlist ************");
-                        printListOfPlaylist();
-                        break;
-                    }
-
-                }
-
-
-            } else {
-                System.out.println("wrong value ...");
-                sc.nextLine();
-            }
-
-        }
-
-    }
-
-    //repeat current song
-    private void repeatCurrentSong(ListIterator<Song> iterator) {
-
-        if (goingForward) {
-            if (iterator.hasPrevious()) {
-                System.out.println("repeat song -> " + iterator.previous().getTitle());
-                goingForward = false;
-            } else {
-                System.out.println("start of list ... ");
-            }
-        } else {
-            if (iterator.hasNext()) {
-                System.out.println("repeat song -> " + iterator.next().getTitle());
-                goingForward = true;
-            } else {
-                System.out.println("end of list ...");
-            }
-        }
-
-    }
-
-
-    private ListIterator<Song> removingSongInPlaylist(ListIterator<Song> iterator) {
-
-        if (playlistSong.isEmpty()) {
-            System.out.println("playlist is empty ....");
-        } else {
-            boolean isRemovedSong = false;
-            while (!isRemovedSong) {
-
-                System.out.println("give me a title of song to be removed : ");
-                String nameSong = sc.nextLine();
-
-                for (int i = 0; i < playlistSong.size(); i++) {
-                    Song songRemove = playlistSong.get(i);
-                    if (songRemove.getTitle().equals(nameSong)) {
-                        playlistSong.remove(songRemove); //remove song
-                        isRemovedSong = true;
-
-                        iterator = playlistSong.listIterator(); //dodaje nowa liste po usunieciu song
-                    }
-                }
-                if (isRemovedSong) {
-                    System.out.println("removed song in playlist : " + nameSong);
-                } else {
-                    System.out.println(" wrong value a name of song ...");
-                }
-
-            }
-        }
-        return iterator;
-    }
-
-    private void skipBackwards(ListIterator<Song> iterator) {
-
-        if (goingForward) {
-
-            if (iterator.hasPrevious()) {
-                iterator.previous();
-            }
-            goingForward = false;
-        }
-
-        if (iterator.hasPrevious()) {
-
-            System.out.println(iterator.previous().getTitle());
-        } else {
-            System.out.println("start list of playlist !!!");
-            goingForward = true;
-        }
-    }
-
-    private void skipForward(ListIterator<Song> iterator) {
-
-        if (!goingForward) { // ! false  -> true
-
-            if (iterator.hasNext()) {
-                iterator.next();
-                goingForward = true;
-            }
-        }
-
-
-        if (iterator.hasNext()) {
-            System.out.println(iterator.next().getTitle());
-        } else {
-            System.out.println("end the list of playlist !!!");
-            goingForward = false;
-        }
-    }
-
-    private void currentSongPlayed(ListIterator<Song> iterator) {
-
-        if (goingForward) {
-
-            if (iterator.hasPrevious()) {
-                iterator.previous();
-                System.out.println(iterator.next().getTitle() + " -> current song");
-            } else {
-                System.out.println("start list of playlist !!!");
-            }
-        } else {
-            if(iterator.hasNext()) {
-                iterator.next();
-                System.out.println(iterator.previous().getTitle() + " -> current song");
-            } else {
-                System.out.println("end the list of playlist !!!");
-            }
-        }
-
-    }
-
-    private void printOptionsForPlaylist() {
-        //todo options my new playlist 1.Quit 2. Skip forward 3. skip backwards 5.repeat the current song
-        System.out.println("\n\t0. Quit \n\t1. print Options For Playlist  \n\t2. Skip forward (next song) \n\t3. skip backwards (previous song)" +
-                "\n\t4. removing song in playlist" + " \n\t5. repeat the current song" + " \n\t6. current song played"
-                + " \n\t7. show the list of playlist ");
-    }
-
-    private void printListOfPlaylist() {
-        int i = 1;
-        if (!(playlistSong.isEmpty())) {
-            for (Song song : playlistSong) {
-                System.out.println((i++) + ". song: " + song.getTitle() + ", duration : " + song.getDuration());
-            }
-        } else {
-            System.out.println("the list of playlist is empty ...");
-        }
+        System.out.println("\n********* MAIN MENU *********\n\t0. show options \n\t1. displays all songs \n\t2. add new song in playlist " +
+                "\n\t3. add album in playlist \n\t4. show add my new songs to playlist \n\t5. create new my playlist for songs and start playing" +
+                "\n\t6. removing album from the playlist  \n\t7. removing a song from the playlist  \n\t8. show all playlists created and start " +
+                "  \n\t9. exit ");
     }
 
     private void addAlbumToPlaylist() {
@@ -450,7 +266,6 @@ public class Album {
     }
 
     private boolean songOrAlbumIsThereOnPlaylist(Album album, Song song) {
-
         int counter = 0;
         if (album != null) {
             for (int i = 0; i < album.listOfSongInAlbum.size(); i++) {
