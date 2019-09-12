@@ -78,7 +78,7 @@ public class Playlist {
 
                 switch (number) {
                     case 0: {
-                        System.out.println("*********** exit ************");
+                        System.out.println("*********** exit to main menu ************");
                         flag = true;
                         break;
                     }
