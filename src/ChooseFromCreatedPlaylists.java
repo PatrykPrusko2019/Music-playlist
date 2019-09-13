@@ -35,37 +35,53 @@ public class ChooseFromCreatedPlaylists {
         System.out.println("********** what you want to do with playlists: **********");
         while(! exit) {
 
-            System.out.println("0. return to main menu \n1. delete the playlist \n2. select the playlist, start playing \n3. show all playlists of list");
-
+            System.out.println("0. return to main menu \n1. delete the playlist \n2. select the playlist, start playing \n3. show all playlists of list \n\n");
+            System.out.println("enter the number: ");
             exit = sc.hasNextInt();
+
             if(exit) {
                 int value = sc.nextInt();
-
+                sc.nextLine();
                 switch (value) {
                     case 0: {
                         System.out.println("selected exit to main menu");
                         return null; // exit
                     }
                     case 1: {
-                        System.out.println("delete the playlist");
-                        removesPlaylist();
+                        if(listOfPlaylistsIsEmpty()) {
+                            System.out.println("*************** delete the playlist ***************");
+                            removesPlaylist();
+                        } else {
+                            System.out.println("playlists of list is empty ...");
+                        }
                         exit = false;
                         break;
                     }
                     case 2: {
-                        selectThePlaylist();
-                        exit = true;
+                        if(listOfPlaylistsIsEmpty()) {
+                            System.out.println("*************** select the playlist, start playing ***************");
+                            selectThePlaylist();
+                            exit = true;
+                        } else {
+                            System.out.println("playlists of list is empty ...");
+                            exit = false;
+                        }
                         break;
                     }
                     case 3: {
-                        System.out.println("show all playlists of list");
-                        showAllPlaylists();
+                        if(listOfPlaylistsIsEmpty() ) {
+                            System.out.println("*************** show all playlists of list ***************");
+                            showAllPlaylists();
+                        } else {
+                            System.out.println("playlists of list is empty ...");
+                        }
+                        exit = false;
                         break;
                     }
                     default: {
-                        if(value >= 0 && value < 4) {
-                            System.out.println("wrong value, range 1 - 2");
-                        }
+                            System.out.println("wrong value, range 0 - 3");
+                            exit = false;
+                            break;
                     }
                 }
             } else {
@@ -74,6 +90,13 @@ public class ChooseFromCreatedPlaylists {
             }
         }
         return playlist;
+    }
+    private boolean listOfPlaylistsIsEmpty() {
+        if( ! listOfPlaylists.isEmpty()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private void selectThePlaylist() {
@@ -102,7 +125,6 @@ public class ChooseFromCreatedPlaylists {
                 System.out.println("wrong value, please again ...");
                 sc.nextLine();
             }
-
         }
     }
 

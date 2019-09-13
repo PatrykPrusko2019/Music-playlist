@@ -57,7 +57,6 @@ public class Playlist {
 
     public void playlistAndStart() {
 
-
         ListIterator<Song> iterator = this.newSongPlaylist.listIterator();
 
         System.out.println("\n*********************** \nstart playing from playlist \n***********************\n ");
@@ -81,6 +80,7 @@ public class Playlist {
                         System.out.println("*********** exit to main menu ************");
                         flag = true;
                         break;
+
                     }
 
                     case 1: {
@@ -114,8 +114,12 @@ public class Playlist {
                         break;
                     }
                     case 7: {
-                        System.out.println("************ show list songs of my playlist ************");
+                        System.out.println("************ show list songs of playlist : " + namePlaylist + " ************");
                         printListOfPlaylist();
+                        break;
+                    }
+                    default: {
+                        System.out.println("wrong value, range 0 - 7");
                         break;
                     }
 
@@ -177,9 +181,9 @@ public class Playlist {
 
     private void printOptionsForPlaylist() {
         //todo options my new playlist 1.Quit 2. Skip forward 3. skip backwards 5.repeat the current song
-        System.out.println("\n\t0. Quit \n\t1. print Options For Playlist  \n\t2. Skip forward (next song) \n\t3. skip backwards (previous song)" +
+        System.out.println("\n\t0. Return to main menu \n\t1. print Options For Playlist  \n\t2. Skip forward (next song) \n\t3. skip backwards (previous song)" +
                 "\n\t4. removing song in playlist" + " \n\t5. repeat the current song" + " \n\t6. current song played"
-                + " \n\t7. show the list of playlist ");
+                + " \n\t7. show list songs of playlist ");
     }
 
     private void skipForward(ListIterator<Song> iterator) {

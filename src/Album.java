@@ -107,6 +107,10 @@ public class Album extends Playlist {
                             Playlist playlist = new Playlist(playlistSong);
                             choosePlaylists.addNewPlaylistInList(playlist);
                             playlist.playlistAndStart();
+                            if(playlist.getNewSongPlaylist().isEmpty()) {
+                                System.out.println("deleted empty playlist\n");
+                                choosePlaylists.removesPlaylistInList(playlist);  //deletes an empty playlist
+                            }
                             playlistSong.removeAll(playlistSong); // removes all songs in list of playlist
                         } else {
                             System.out.println("add new song in playlist ...");
@@ -123,6 +127,7 @@ public class Album extends Playlist {
                         break;
                     }
                     case 7: {
+
                         if (!ifPlaylistIsEmpty()) { // ! false -> true
                             System.out.println("****** removing a song from the playlist *********");
                             removeSongInPlaylist();
@@ -139,6 +144,10 @@ public class Album extends Playlist {
                             if(playlistChoice != null) { // if not null start playing songs
                                  System.out.println("****** start ******");
                                  playlistChoice.playlistAndStart();
+                                if(playlistChoice.getNewSongPlaylist().isEmpty()) { //deletes an empty playlist
+                                    choosePlaylists.removesPlaylistInList(playlistChoice);
+                                    System.out.println("deleted empty playlist\n");
+                                }
                              }
                         } else {
                             System.out.println("no playlists in list... ");
