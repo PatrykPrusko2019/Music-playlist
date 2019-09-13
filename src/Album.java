@@ -63,10 +63,9 @@ public class Album extends Playlist {
     public void startApplication() {
 
         System.out.println("start application :\n******** Playlist for songs ********");
-
+        showOptions();
         int number;
         boolean flag = false;
-        showOptions();
         while (!flag) {
             System.out.println("\nenter the number (options show -> 0 ) : ");
             boolean isInt = sc.hasNextInt();
@@ -112,6 +111,7 @@ public class Album extends Playlist {
                                 choosePlaylists.removesPlaylistInList(playlist);  //deletes an empty playlist
                             }
                             playlistSong.removeAll(playlistSong); // removes all songs in list of playlist
+                            showOptions();
                         } else {
                             System.out.println("add new song in playlist ...");
                         }
@@ -149,6 +149,7 @@ public class Album extends Playlist {
                                     System.out.println("deleted empty playlist\n");
                                 }
                              }
+                            showOptions();
                         } else {
                             System.out.println("no playlists in list... ");
                         }
@@ -222,7 +223,7 @@ public class Album extends Playlist {
     }
 
     private void showOptions() {
-        System.out.println("\n********* MAIN MENU *********\n\t0. show options \n\t1. displays all songs \n\t2. add new song in playlist " +
+        System.out.println("\n********* CREATE NEW PLAYLIST, MAIN MENU *********\n\t0. show options \n\t1. displays all songs \n\t2. add new song in playlist " +
                 "\n\t3. add album in playlist \n\t4. show add my new songs to playlist \n\t5. create new my playlist for songs and start playing" +
                 "\n\t6. removing album from the playlist  \n\t7. removing a song from the playlist  \n\t8. show all playlists created and start " +
                 "  \n\t9. exit ");

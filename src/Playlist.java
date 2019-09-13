@@ -59,7 +59,7 @@ public class Playlist {
 
         ListIterator<Song> iterator = this.newSongPlaylist.listIterator();
 
-        System.out.println("\n*********************** \nstart playing from playlist \n***********************\n ");
+        System.out.println("\n*********************** \nSTART PLAYING FROM PLAYLIST \n***********************\n ");
 
 
         System.out.println("My playlist: " + namePlaylist);

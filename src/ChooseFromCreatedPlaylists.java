@@ -32,7 +32,7 @@ public class ChooseFromCreatedPlaylists {
 
     public Playlist choosePlaylist() {
         boolean exit = false;
-        System.out.println("********** what you want to do with playlists: **********");
+        System.out.println("********** YOUR PLAYLISTS CREATED **********");
         while(! exit) {
 
             System.out.println("0. return to main menu \n1. delete the playlist \n2. select the playlist, start playing \n3. show all playlists of list \n\n");
