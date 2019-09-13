@@ -3,6 +3,8 @@ Application list of played songs:
 - creates a new song playlist
 - adds songs
 - adds an album
+- adds / creates new playlists
+- deletes playlist
 - deletes songs
 - displays the current list.
 
