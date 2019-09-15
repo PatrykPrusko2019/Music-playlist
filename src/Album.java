@@ -45,11 +45,10 @@ public class Album extends Playlist {
 
     public void printListOfSongsInAlbum() {
         System.out.println("****** name Album: " + this.name + " *********");
-        int i = 1;
+        int counter = 1;
         for (Song song : this.listOfSongInAlbum) {
-            System.out.println((i++) + ". song : " + song.getTitle() + ", duration : " + song.getDuration());
+                System.out.println( (counter++) + ". song : " + song.getTitle() + ", duration : " + song.getDuration() );
         }
-
     }
 
     public void printListOfAlbums() {
@@ -67,6 +66,7 @@ public class Album extends Playlist {
         int number;
         boolean flag = false;
         while (!flag) {
+            System.out.println();
             System.out.println("\nenter the number (options show -> 0 ) : ");
             boolean isInt = sc.hasNextInt();
 
@@ -86,13 +86,28 @@ public class Album extends Playlist {
                         break;
                     }
                     case 2: {
-                        System.out.println("****** add new song in playlist *******");
-                        addNewSongInPlaylist();
+                        if( ! allSongsAddedAlready()) {
+                            System.out.println("****** add new song in playlist *******");
+                            System.out.println("songs available for adding to the playlist");
+                            showAvailableSongsToAdd();
+                            System.out.println();
+                            addNewSongInPlaylist();
+                        } else {
+                            System.out.println("playlist is full, the song cannot be added to the playlist");
+                        }
                         break;
                     }
+
                     case 3: {
-                        System.out.println("****** add album in playlist *******");
-                        addAlbumToPlaylist();
+                        if( ! allSongsAddedAlready()) {
+                            System.out.println("****** add album in playlist *******");
+                            System.out.println("albums available for adding to the playlist");
+                            showAvailableAlbumsToAdd();
+                            System.out.println();
+                            addAlbumToPlaylist();
+                        }else {
+                            System.out.println("playlist is full, the song cannot be added to the playlist");
+                        }
                         break;
                     }
                     case 4: {
@@ -120,6 +135,8 @@ public class Album extends Playlist {
                     case 6: {
                         if (!ifPlaylistIsEmpty()) { // ! false -> true
                             System.out.println("****** removing album from the playlist *********");
+                            System.out.println("albums available to delete from the playlist");
+                            printListOfPlaylistToCreate();
                             removeAlbumInPlaylist();
                         } else {
                             System.out.println("the album cannot be deleted of playlist ...");
@@ -130,6 +147,8 @@ public class Album extends Playlist {
 
                         if (!ifPlaylistIsEmpty()) { // ! false -> true
                             System.out.println("****** removing a song from the playlist *********");
+                            System.out.println("songs available to delete from the playlist");
+                            printListOfPlaylistToCreate();
                             removeSongInPlaylist();
                         } else {
                             System.out.println("the song cannot be deleted of playlist ...");
@@ -171,16 +190,35 @@ public class Album extends Playlist {
             }
         }
     }
+    private boolean allSongsAddedAlready() {
+        if(playlistSong.size() == listAllSongsToPlaylist.size()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     public void printListOfPlaylistToCreate() {
         int i = 1;
         if (!(playlistSong.isEmpty())) {
             for (Song song : playlistSong) {
-                System.out.println((i++) + ". song: " + song.getTitle() + ", duration : " + song.getDuration());
+                System.out.println((i++) + ". song: " + song.getTitle() + ", duration : " + song.getDuration() + " , album: " + returnAlbumName(song.getTitle()));
             }
         } else {
             System.out.println("the list of playlist is empty ...");
         }
+    }
+    //return name of album
+    private String returnAlbumName(String searchSong) {
+        String nameOfAlbum = "";
+            for(int i = 0; i < listOfAlbum.size(); i++) {
+                Album album = listOfAlbum.get(i);
+                for(Song song : album.listOfSongInAlbum)
+                if(song.getTitle().equals(searchSong)) {
+                    nameOfAlbum = album.getName();
+                }
+            }
+            return nameOfAlbum;
     }
 
     private boolean ifPlaylistIsEmpty() {
@@ -224,8 +262,8 @@ public class Album extends Playlist {
 
     private void showOptions() {
         System.out.println("\n********* CREATE NEW PLAYLIST, MAIN MENU *********\n\t0. show options \n\t1. displays all songs \n\t2. add new song in playlist " +
-                "\n\t3. add album in playlist \n\t4. show add my new songs to playlist \n\t5. create new my playlist for songs and start playing" +
-                "\n\t6. removing album from the playlist  \n\t7. removing a song from the playlist  \n\t8. show all playlists created and start " +
+                "\n\t3. add album in playlist \n\t4. show list of songs added to new playlist \n\t5. create new playlist and start playing" +
+                "\n\t6. remove album from the playlist  \n\t7. remove song from the playlist  \n\t8. show all playlists created and start playing " +
                 "  \n\t9. exit ");
     }
 
@@ -388,7 +426,7 @@ public class Album extends Playlist {
                 return i;
             }
         }
-        return -1;
+        return -1; //not found
     }
 
     private void printAllSongs() {
@@ -398,6 +436,32 @@ public class Album extends Playlist {
                 album.printListOfSongsInAlbum();
 
             }
+    }
+
+    private void showAvailableSongsToAdd() {
+        int counter = 1;
+        for(int i = 0; i < this.listOfAlbum.size(); i++) {
+            Album album = listOfAlbum.get(i);
+            for(Song song : album.listOfSongInAlbum) {
+
+                int isOnTheList = isThereSongInPlaylist(song.getTitle());
+                if(isOnTheList < 0) {
+                    System.out.println((counter++) + " . song: " + song.getTitle() + ", duration: " + song.getDuration() + ", album: " + album.getName());
+                }
+            }
+        }
+    }
+
+    private void showAvailableAlbumsToAdd() {
+        int counter = 1;
+        for(int i = 0; i < this.listOfAlbum.size(); i++) {
+            Album album = listOfAlbum.get(i);
+                Song song = null;
+                if(! songOrAlbumIsThereOnPlaylist(album, song)) { // albums available
+                    System.out.println((counter++) + ". album: " + album.getName());
+                }
+        }
+
     }
 
 }

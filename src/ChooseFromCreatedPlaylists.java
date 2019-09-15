@@ -163,6 +163,6 @@ public class ChooseFromCreatedPlaylists {
             playlist.printListOfPlaylist();
             System.out.println("*******************************\n");
         }
-        System.out.println("\n\n");
+        System.out.println();
     }
 }
